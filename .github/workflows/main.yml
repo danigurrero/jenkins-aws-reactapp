@@ -1,4 +1,4 @@
-name: Jenkins Pipeline
+name: Jenkins Pipelin
 
 on:
   push:
