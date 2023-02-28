@@ -1,0 +1,26 @@
+name: Jenkins Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Build and Deploy
+        env:
+          AWS_REGION: us-east-1
+        run: |
+          npm install
+          npm run build
+          aws s3 sync build s3://jenkins-bucket-pipeline --acl public-read \
+            --region $AWS_REGION \
+            --access-key-id ${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --secret-access-key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
